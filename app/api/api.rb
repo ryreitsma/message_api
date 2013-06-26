@@ -7,17 +7,12 @@ class API < Grape::API
   
   helpers do
     def current_user
-      @user ||= User.find_by_name(env['REMOTE_USER'])
+      @user ||= User.find_by_email(request.env['REMOTE_USER'])
     end
   end
 
   resource :conversations do
-    mount ConversationAPI => '/'
-    segment '/:conversation_id' do
-      resource :messages do
-        mount MessageAPI => '/'
-      end
-    end
+    mount ConversationAPI => '/'    
   end
   
   resource :users do

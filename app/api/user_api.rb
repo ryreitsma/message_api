@@ -1,9 +1,7 @@
 class UserAPI < Grape::API
   desc "Get all users"
   get do
-    @users = User.all
-  
-    present @users, with: Entities::User
+    present User.all, with: Presenters::User
   end 
   
   desc "Get a user"
@@ -12,7 +10,7 @@ class UserAPI < Grape::API
 	end
   route_param :id do
 		get do
-      @user = User.find(params[:id])
+      present User.find(params[:id]), with: Presenters::User
     end
   end
 end

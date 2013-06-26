@@ -1,7 +1,7 @@
 class MessageAPI < Grape::API
 	desc "Get all messages"
 	get do
-		Message.all
+		present Message.where(conversation_id: params[:conversation_id]), with: Presenters::Message
 	end
 	
 	desc "Return a message."
@@ -10,7 +10,7 @@ class MessageAPI < Grape::API
 	end
 	route_param :id do
 		get do
-			Message.find(params[:id])
+			present Message.find(params[:id]), Presenters::Message
 		end
 	end
 
@@ -21,10 +21,12 @@ class MessageAPI < Grape::API
 
 	post do
 		Message.create!({
-			user: current_user,
-			conversation: Conversation.find(params[:conversation_id]),
+			user_id: current_user.id,
+			conversation_id: params[:conversation_id],
 			content: params[:content]
 		})
+		
+		{status: 'OK'}
 	end
 
 	desc "Update a message."
@@ -36,6 +38,8 @@ class MessageAPI < Grape::API
 		m = Message.find(params[:id])
 		m.update_attribute(:content, params[:content])
 		m.update_attribute(:conversation_id, params[:conversation_id])
+		
+		{status: 'OK'}
 	end
 
 	desc "Delete a message."
@@ -44,5 +48,7 @@ class MessageAPI < Grape::API
 	end
 	delete ':id' do
 		Message.find(params[:id]).destroy
+		
+		{status: 'OK'}
 	end
 end
