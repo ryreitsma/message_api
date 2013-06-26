@@ -1,4 +1,5 @@
 class Message < ActiveRecord::Base
   belongs_to :user
-  attr_accessible :content
+  belongs_to :conversation
+  attr_accessible :content  
 end

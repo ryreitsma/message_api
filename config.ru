@@ -3,16 +3,17 @@ require 'bundler/setup'
 require 'grape'
 require 'grape-entity'
 require 'active_record'
+require 'yaml'
 
+$:.unshift File.dirname(__FILE__)
 # Require all application classes
 Dir['./app/**/*.rb'].each {|f| require f}
 
+ENVIRONMENT = ENV['RACK_ENV'] || 'development'
+
 ActiveRecord::Base.establish_connection(
-  adapter: "sqlite3",
-  database: "db/development.sqlite3",
-  pool: 5,
-  timeout: 5000
+ YAML.load_file('config/database.yml')[ENVIRONMENT]
 )
 
 use ActiveRecord::ConnectionAdapters::ConnectionManagement
-run MessageAPI
+run API
