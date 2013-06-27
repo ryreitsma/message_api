@@ -8,9 +8,7 @@ class UserAPI < Grape::API
   params do
     requires :id, type: Integer, desc: "User id."
   end
-  route_param :id do
-    get do
-      present User.find(params[:id]), with: Presenters::User
-    end
+  get ':id' do
+    present User.find(params[:id]), with: Presenters::User
   end
 end

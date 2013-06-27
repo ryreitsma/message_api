@@ -1,19 +1,6 @@
+require 'app/api/message_api'
+
 class ConversationAPI < Grape::API
-  desc "Get all conversations"
-  get do
-    present Conversation.all, with: Presenters::Conversation
-  end
-
-  desc "Return a conversation."
-  params do
-    requires :id, type: Integer, desc: "Conversation id."
-  end
-  route_param :id do
-    get do
-      present Conversation.find(params[:id]), with: Presenters::Conversation
-    end
-  end
-
   desc "Create a conversation."
   post do
     Conversation.create!({
@@ -27,6 +14,19 @@ class ConversationAPI < Grape::API
   end
   delete ':id' do
     Conversation.find(params[:id]).destroy
+  end
+
+  desc "Get all conversations"
+  get do
+    present Conversation.all, with: Presenters::Conversation
+  end
+
+  desc "Return a conversation."
+  params do
+    requires :id, type: Integer, desc: "Conversation id."
+  end
+  get ':id' do
+    present Conversation.find(params[:id]), with: Presenters::Conversation
   end
 
   segment '/:conversation_id' do

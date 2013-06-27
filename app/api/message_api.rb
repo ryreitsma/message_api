@@ -8,17 +8,14 @@ class MessageAPI < Grape::API
   params do
     requires :id, type: Integer, desc: "Message id."
   end
-  route_param :id do
-    get do
-      present Message.find(params[:id]), Presenters::Message
-    end
+  get ':id' do
+    present Message.find(params[:id]), Presenters::Message
   end
 
   desc "Create a message."
   params do
     requires :content, type: String, desc: "Your message"
   end
-
   post do
     Message.create!({
       user_id: current_user.id,
